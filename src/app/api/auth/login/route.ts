@@ -8,7 +8,7 @@ const loginSchema = z.object({
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
 });
 
-export async function LoginUser(req: Request) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const parsed = loginSchema.safeParse(body);

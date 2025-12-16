@@ -9,7 +9,7 @@ const registerSchema = z.object({
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
 });
 
-export async function registerUser(req: Request) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const parsed = registerSchema.safeParse(body);

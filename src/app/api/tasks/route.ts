@@ -9,7 +9,7 @@ const CreateTaskSchema = z.object({
   status: z.enum(["pending", "in_progress", "completed"]).optional(),
 });
 
-export async function GetTasks(req: Request) {
+export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get("Authorization");
     const userId = getUserIdFromAuthHeader(authHeader);
@@ -37,7 +37,7 @@ export async function GetTasks(req: Request) {
   }
 }
 
-export async function PostTask(req: Request) {
+export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get("Authorization");
     const userId = getUserIdFromAuthHeader(authHeader);

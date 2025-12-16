@@ -8,7 +8,7 @@ const updateTaskSchema = z.object({
   status: z.enum(["pending", "in_progress", "completed"]).optional(),
 });
 
-export async function ModTask(
+export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
@@ -66,7 +66,7 @@ export async function ModTask(
   }
 }
 
-export async function DeleteTask(
+export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
