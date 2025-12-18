@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import z from "zod";
 
 const updateTaskSchema = z.object({
-  title: z.string().optional(),
+  title: z.string().min(1, "Título não pode ser vazio"),
   description: z.string().optional(),
   status: z.enum(["pending", "in_progress", "completed"]).optional(),
 });

@@ -80,6 +80,6 @@ export async function POST(req: Request) {
         success: false,
       },
       { status: 500 }
-    );
+    )
   }
 }

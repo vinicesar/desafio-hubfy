@@ -4,9 +4,9 @@ import prisma from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 
 const registerSchema = z.object({
-  userName: z.string().min(1, "O nome de usuário é obrigatório."),
+  name: z.string().min(1, "O nome de usuário é obrigatório."),
   email: z.string().email("Email inválido."),
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
+  password: z.string().min(8, "A senha deve ter pelo menos 8 caracteres."),
 });
 
 export async function POST(req: Request) {
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const { userName, email, password } = parsed.data;
+    const { name, email, password } = parsed.data;
 
     const existingUser = await prisma.users.findUnique({ where: { email } });
     if (existingUser) {
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const hashedPassword = await hashPassword(password);
 
     const newUser = await prisma.users.create({
-      data: { name: userName, email, password: hashedPassword },
+      data: { name: name, email, password: hashedPassword },
       select: { id: true, name: true, email: true, created_at: true },
     });
 
