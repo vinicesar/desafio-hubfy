@@ -1,5 +1,6 @@
 import { getUserIdFromAuthHeader } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
 import z from "zod";
 
 const updateTaskSchema = z.object({
@@ -10,12 +11,13 @@ const updateTaskSchema = z.object({
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = req.headers.get("Authorization");
     const userId = getUserIdFromAuthHeader(authHeader);
 
+    const { id } = await params;
     const body = await req.json();
     const parsed = updateTaskSchema.safeParse(body);
 
@@ -29,8 +31,8 @@ export async function PUT(
       );
     }
 
-    const task = await prisma?.tasks.findUnique({
-      where: { id: Number(params.id) },
+    const task = await prisma.tasks.findUnique({
+      where: { id: Number(id) },
     });
 
     if (!task || task.user_id !== userId) {
@@ -43,8 +45,8 @@ export async function PUT(
       );
     }
 
-    const updatedTask = await prisma?.tasks.update({
-      where: { id: Number(params.id) },
+    const updatedTask = await prisma.tasks.update({
+      where: { id: Number(id) },
       data: parsed.data,
     });
 
@@ -68,14 +70,16 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authHeader = req.headers.get("Authorization");
     const userId = getUserIdFromAuthHeader(authHeader);
 
-    const task = await prisma?.tasks.findUnique({
-      where: { id: Number(params.id) },
+    const { id } = await params;
+
+    const task = await prisma.tasks.findUnique({
+      where: { id: Number(id) },
     });
 
     if (!task || task.user_id !== userId) {
@@ -87,7 +91,7 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    await prisma?.tasks.delete({ where: { id: Number(params.id) } });
+    await prisma.tasks.delete({ where: { id: Number(id) } });
 
     return NextResponse.json(
       {

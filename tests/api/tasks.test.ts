@@ -124,7 +124,7 @@ describe("API /api/tasks/[id]", () => {
     );
 
     const response = await TaskPUT(request, {
-      params: { id: String(task.id) },
+      params: Promise.resolve({ id: String(task.id) }),
     });
     const body = await response.json();
 
@@ -155,7 +155,7 @@ describe("API /api/tasks/[id]", () => {
     );
 
     const response = await TaskDELETE(request, {
-      params: { id: String(task.id) },
+      params: Promise.resolve({ id: String(task.id) }),
     });
     const body = await response.json();
 
